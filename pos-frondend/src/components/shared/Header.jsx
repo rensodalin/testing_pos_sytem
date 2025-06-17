@@ -8,7 +8,7 @@ import logo from "../../assets/images/logo.png";
 const Header = () => {
 
   return (
-    <header className="flex justify-between items-center py-4 px-8 bg-gray-900">
+    <header className="flex justify-between items-center py-4 px-8 bg-[#202a3e] ">
       {/* LOGO */}
       <div className="flex items-center gap-2">
         <img src={logo} className="h-8 w-8" alt="cafio logo" />
@@ -18,18 +18,18 @@ const Header = () => {
       </div>
 
       {/* SEARCH */}
-      <div className="flex items-center gap-4 bg-[#373232] rounded-[15px] px-5 py-2 w-[500px]">
+      <div className="flex items-center gap-4 bg-[#2b3447] rounded-[15px] px-5 py-2 w-[500px]">
         <FaSearch className="text-[#f5f5f5]" />
         <input
           type="text"
           placeholder="Search"
-          className="bg-[#373232] outline-none text-[#f5f5f5]"
+          className="bg-[#2b3447] outline-none text-[#f5f5f5]"
         />
       </div>
 
       {/* LOGGED USER DETAILS */}
       <div className="flex items-center gap-4">
-        <div className="bg-[#373232] rounded-[15px] p-3 cursor-pointer">
+        <div className="bg-[#2e3e42] rounded-[15px] p-3 cursor-pointer">
           <FaBell className="text-[#f5f5f5] text-2xl" />
         </div>
         <div className="flex items-center gap-3 cursor-pointer">

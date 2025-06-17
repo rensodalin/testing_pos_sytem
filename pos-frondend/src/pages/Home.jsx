@@ -10,7 +10,7 @@ import PopularDishes from '../components/home/PopularDishes';
 
 const Home = () => {
   return (
-    <section className="bg-[#1f1f1f]  h-[calc(100vh-5rem)] overflow-y-auto flex gap-3">
+    <section className="bg-[#313f5a]  h-[calc(100vh-5rem)] overflow-y-auto flex gap-3">
       {/* Left Div */}
       <div className="flex-[3]">
         <Greetings />

@@ -3,7 +3,7 @@ import { FaCheckDouble, FaLongArrowAltRight } from "react-icons/fa";
 import { FaCircle } from "react-icons/fa";
 const OrderCard = () => {
   return (
-    <div className="w-full bg-[#2a2a2a] p-4 rounded-xl text-[#f5f5f5] shadow-md">
+    <div className="w-full bg-[#262b42] p-4 rounded-xl text-[#f5f5f5] shadow-md">
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-3">
           <div className="bg-yellow-500 text-black font-bold rounded-md px-3 py-2">AM</div>

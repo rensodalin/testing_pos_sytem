@@ -76,7 +76,7 @@ export const popularDishes = [
     },
     {
       id: 9,
-      image: pooriSabji,
+      image: pic6,
       name: 'Poori Sabji',
       numberOfOrders: 140,
     },

@@ -6,7 +6,7 @@ import BackButton from "../components/shared/BackButton";
 function Orders() {
   const [Status , setStatus] = useState("all");
   return (
-    <section className="bg-[#1f1f1f] h-screen flex flex-col">
+    <section className="bg-[#313f5a] h-screen flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between px-10 py-4">
         <div className="flex items-center gap-4">
@@ -17,19 +17,19 @@ function Orders() {
         </div>
         <div className="flex items-center justify-around gap-4">
           <button onClick={() => setStatus("all")} className={`text-[#ababab] text-lg 
-          ${Status === "all" && "bg-[#383838] rounded-lg px-5 py-2"} rounded-lg px-5 py-2 font-semibold`}>
+          ${Status === "all" && "bg-[#456673] rounded-lg px-5 py-2"} rounded-lg px-5 py-2 font-semibold`}>
             All
           </button>
           <button onClick={() => setStatus("progress")}  className={`text-[#ababab] text-lg 
-          ${Status === "progress" && "bg-[#383838] rounded-lg px-5 py-2"} rounded-lg px-5 py-2 font-semibold`}>
+          ${Status === "progress" && "bg-[#456673] rounded-lg px-5 py-2"} rounded-lg px-5 py-2 font-semibold`}>
             In Progress
           </button>
           <button onClick={() => setStatus("ready")}  className={`text-[#ababab] text-lg 
-          ${Status === "ready" && "bg-[#383838] rounded-lg px-5 py-2"} rounded-lg px-5 py-2 font-semibold`}>
+          ${Status === "ready" && "bg-[#456673] rounded-lg px-5 py-2"} rounded-lg px-5 py-2 font-semibold`}>
             Ready
           </button>
           <button onClick={() => setStatus("completed")}  className={`text-[#ababab] text-lg 
-          ${Status === "completed" && "bg-[#383838] rounded-lg px-5 py-2"} rounded-lg px-5 py-2 font-semibold`}>
+          ${Status === "completed" && "bg-[#456673] rounded-lg px-5 py-2"} rounded-lg px-5 py-2 font-semibold`}>
             Completed
           </button>
         </div>

@@ -9,8 +9,8 @@ const BottomNav = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-gray-900 p-2 h-16 flex justify-around">
-      <button onClick={() => navigate("/")} className="flex items-center justify-center text-[#f5f5f5] bg-[#343434] w-[200px] rounded-[20px]">
+    <div className="fixed bottom-0 left-0 right-0 bg-[#202a3e] p-2 h-16 flex justify-around">
+      <button onClick={() => navigate("/")} className="flex items-center justify-center text-[#f5f5f5] bg-[#2e3e42] w-[200px] rounded-[20px]">
         <FaHome className="inline mr-2" size={20} /> <p>Home</p>
       </button>
       
