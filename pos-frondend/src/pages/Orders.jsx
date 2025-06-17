@@ -6,7 +6,7 @@ import BackButton from "../components/shared/BackButton";
 function Orders() {
   const [Status , setStatus] = useState("all");
   return (
-    <section className="bg-[#313f5a] h-screen flex flex-col">
+    <section className="bg-[#202a3e] h-screen flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between px-10 py-4">
         <div className="flex items-center gap-4">
