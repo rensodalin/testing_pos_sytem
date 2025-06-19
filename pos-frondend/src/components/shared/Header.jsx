@@ -8,22 +8,20 @@ import logo from "../../assets/images/logo.png";
 const Header = () => {
 
   return (
-    <header className="flex justify-between items-center py-4 px-8 bg-[#202a3e] ">
+    <header className="flex flex-col md:flex-row justify-between items-center py-4 px-4 md:px-8 bg-[#202a3e] space-y-4 md:space-y-0">
       {/* LOGO */}
       <div className="flex items-center gap-2">
         <img src={logo} className="h-8 w-8" alt="cafio logo" />
-        <h1 className="text-lg font-semibold text-[#f5f5f5] tracking-wide">
-          Cafio
-        </h1>
+        <h1 className="text-lg font-semibold text-[#f5f5f5] tracking-wide">Cafio</h1>
       </div>
 
       {/* SEARCH */}
-      <div className="flex items-center gap-4 bg-[#2b3447] rounded-[15px] px-5 py-2 w-[500px]">
+      <div className="flex items-center gap-4 bg-[#2b3447] rounded-[15px] px-5 py-2 w-full md:w-[500px]">
         <FaSearch className="text-[#f5f5f5]" />
         <input
           type="text"
           placeholder="Search"
-          className="bg-[#2b3447] outline-none text-[#f5f5f5]"
+          className="w-full bg-[#2b3447] outline-none text-[#f5f5f5]"
         />
       </div>
 

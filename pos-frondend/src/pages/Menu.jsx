@@ -11,9 +11,9 @@ const Menu = () => {
   const customerData = useSelector(state => state.customer);
 
   return (
-    <section className='bg-[#202a3e]  h-[calc(100vh-5rem)] overflow-y-auto flex gap-3'>
-    <div className='flex-[3]'>
-    <div className="flex items-center justify-between px-10 py-4">
+    <section className='bg-[#202a3e] min-h-[calc(100vh-5rem)] overflow-y-auto flex flex-col lg:flex-row gap-3 p-4'>
+    <div className='w-full lg:flex-[3]'>
+    <div className="flex flex-col sm:flex-row items-center justify-between px-4 md:px-10 py-4 space-y-4 sm:space-y-0">
         <div className="flex items-center gap-4">
           <BackButton />
           <h1 className="text-[#f5f5f5] text-2xl font-bold tracking-wide">

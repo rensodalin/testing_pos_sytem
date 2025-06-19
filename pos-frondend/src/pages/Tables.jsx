@@ -8,13 +8,11 @@ const Tables = () => {
   const [status, setStatus] = useState("all");
 
   return (
-    <section className='bg-[#1f1f1f] h-[calc(100vh-5rem)] overflow-hidden'>
-      <div className="flex items-center justify-between px-10 py-4">
+    <section className='bg-[#1f1f1f] min-h-[calc(100vh-5rem)] overflow-hidden'>
+      <div className="flex flex-col sm:flex-row items-center justify-between px-4 md:px-10 py-4 space-y-4 sm:space-y-0">
         <div className="flex items-center gap-4">
           <BackButton />
-          <h1 className="text-[#f5f5f5] text-2xl font-bold tracking-wide">
-            Tables
-          </h1>
+          <h1 className="text-[#f5f5f5] text-xl md:text-2xl font-bold tracking-wide">Tables</h1>
         </div>
 
         <div className="flex items-center justify-around gap-4">

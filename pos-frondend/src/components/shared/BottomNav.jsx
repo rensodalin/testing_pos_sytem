@@ -39,11 +39,9 @@ const BottomNav = () => {
     <div className="fixed bottom-0 left-0 right-0 bg-[#202a3e] p-2 h-16 flex justify-around">
       <button
         onClick={() => navigate("/")}
-        className={`flex items-center justify-center font-bold ${
-          isActive("/") ? "text-[#f5f5f5] bg-[#343434]" : "text-[#ababab]"
-        } w-[200px] rounded-[15px]`}
+        className={`flex items-center justify-center font-bold ${isActive("/") ? "text-[#f5f5f5] bg-[#343434]" : "text-[#ababab]"} w-[200px] rounded-[15px] text-sm md:text-base`}
       >
-        <FaHome className="inline mr-2" size={20} /> <p>Home</p>
+        <FaHome className="inline mr-2" size={18} /> <p>Home</p>
       </button>
       <button
         onClick={() => navigate("/orders")}

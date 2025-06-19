@@ -10,9 +10,9 @@ import PopularDishes from '../components/home/PopularDishes';
 
 const Home = () => {
   return (
-    <section className="bg-[#202a3e]  h-[calc(100vh-5rem)] overflow-y-auto flex gap-3">
+    <section className="bg-[#202a3e] h-screen flex flex-col lg:flex-row gap-3 p-4 overflow-y-auto pb-24 lg:pb-4 lg:overflow-hidden">
       {/* Left Div */}
-      <div className="flex-[3]">
+      <div className="w-full lg:flex-[3] lg:overflow-y-auto lg:pb-20">
         <Greetings />
         <div className="flex items-center w-full gap-3 px-8 mt-8">
           <MiniCard title="Total Earnings" icon={<BsCashCoin />} number={512} footerNum={1.6} />
@@ -21,7 +21,7 @@ const Home = () => {
         <RecentOrders />
       </div>
       {/* Right Div */}
-      <div className="flex-[2]">
+      <div className="w-full lg:flex-[2] lg:overflow-y-auto lg:pb-20">
         <PopularDishes />
       </div>
       <BottomNav />
