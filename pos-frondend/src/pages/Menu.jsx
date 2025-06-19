@@ -3,7 +3,13 @@ import BottomNav from '../components/shared/BottomNav'
 import BackButton from '../components/shared/BackButton'
 import { IoIosCafe } from "react-icons/io";
 import MenuContainer from '../components/menu/MenuContainer';
+import CustomerInfo from '../components/menu/CustomerInfo';
+import CartInfo from '../components/menu/CartInfo';
+import Bill from '../components/menu/Bill';
+import { useSelector } from 'react-redux';
 const Menu = () => {
+  const customerData = useSelector(state => state.customer);
+
   return (
     <section className='bg-[#202a3e]  h-[calc(100vh-5rem)] overflow-y-auto flex gap-3'>
     <div className='flex-[3]'>
@@ -19,10 +25,10 @@ const Menu = () => {
           <IoIosCafe className="text-[#f5f5f5] text-4xl" />
           <div className="flex flex-col items-start">
             <h1 className="text-md text-[#f5f5f5] font-semibold tracking-wide">
-             Customer Name 
+             {customerData.customerName || "customer Name"} 
             </h1>
             <p className="text-xs text-[#ababab] font-medium">
-            Table No :
+            {customerData.table || "N/A" }
             </p>
           </div>
         </div>
@@ -30,7 +36,17 @@ const Menu = () => {
       </div>
       <MenuContainer />
     </div>
-    <div className='flex-[1] bg-blue-500'></div>
+    {/* right div  */}
+    <div className='flex-[1] bg-[#262b42] mt-4 mr-3 h-[780px] rounded-lg pt-2'>
+        {/* customer infor  */}
+        <CustomerInfo />
+         <hr className='border-[#2a2a2a] border-t-2' />
+         {/* cart items */}
+        < CartInfo />
+        {/* bill  */}
+        <hr className='border-[#2a2a2a] border-t-2' />
+        <Bill />
+    </div>
 
       <BottomNav />
     </section>

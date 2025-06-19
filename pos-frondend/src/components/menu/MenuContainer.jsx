@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { menu } from "../../constants";
 import { getBgColor } from "../../utils";
 import { GrRadialSelected } from "react-icons/gr";
-
+import { FaCartShopping } from "react-icons/fa6";
 const MenuContainer = () => {
   const [selected, setselected] = useState(menu[0]);
   const [itemCount, setItemCount] = useState(0);
@@ -58,10 +58,11 @@ const MenuContainer = () => {
               className="flex flex-col items-start justify-between p-4 rounded-lg
                     h-[150px] cursor-pointer hover:bg-[#2a2a2a] bg-[#1a1a1a]"
             >
-              <div className="flex items-center justify-between w-full">
+              <div className="flex items-start justify-between w-full">
                 <h1 className="text-[#f5f5f5] text-lg font-semibold">
                   {menu.name}
                 </h1>
+                <button className="bg-[#2e4a40] text-[#02ca3a] p-2 rounded-lg"><FaCartShopping size={20} /></button>
               </div>
               <p className="text-[#ababab] text-xl font-bold">${menu.price}</p>
               <div className="flex items-center justify-between bg-[#1f1f1f] px-4 py-3 rounded-lg gap-6 z-20">
