@@ -56,7 +56,7 @@ const TableCard = ({ id, name, status, initials, seats }) => {
     >
       <div className="flex items-center justify-between px-1">
         <h1 className="text-[#f5f5f5] text-lg md:text-xl font-semibold">
-          Table <FaLongArrowAltRight className="text-[#ababab] ml-2 inline" /> {name}
+          Table <FaLongArrowAltRight className="text-[#ababab] ml-2 inline" />{name}
         </h1>
         <p
           className={`${

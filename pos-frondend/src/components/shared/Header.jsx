@@ -35,7 +35,7 @@ const Header = () => {
   return (
     <header className="flex flex-col md:flex-row justify-between items-center py-4 px-4 md:px-8 bg-[#202a3e] space-y-4 md:space-y-0">
       {/* LOGO */}
-      <div className="flex items-center gap-2">
+      <div onClick={() => navigate("/")} className="flex items-center gap-2 cursor-pointer">
         <img src={logo} className="h-8 w-8" alt="cafio logo" />
         <h1 className="text-lg font-semibold text-[#f5f5f5] tracking-wide">Cafio</h1>
       </div>
