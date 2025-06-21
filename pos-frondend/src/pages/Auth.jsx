@@ -36,7 +36,7 @@ function Auth() {
 
         <h2 className='text-4xl text-center mt-4 font-semibold text-yellow-400 mb-10'>{isRegister ? "Emplooyee Registration " : " Employee login"}</h2>
         {/* componet */}
-        {isRegister ? <Register/> : <Login/> }
+        {isRegister ? <Register setIsRegister={setIsRegister}/> : <Login/> }
       
         <div className='flex justify-center mt-6'>
           <p className='text-sm text-[#ababab]'>

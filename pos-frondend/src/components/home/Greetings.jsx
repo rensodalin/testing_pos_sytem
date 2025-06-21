@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const Greetings = () => {
+  const userData = useSelector(state => state.user);
   const [dateTime, setDateTime] = useState(new Date());
 
   useEffect(() => {
@@ -22,7 +24,7 @@ const Greetings = () => {
     <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 sm:px-8 mt-5'>
       <div>
         <h1 className='text-[#f5f5f5] text-xl sm:text-2xl font-semibold tracking-wide'>
-          Good Morning , Dalin
+          Good Morning , {userData.name || "Test user"}
         </h1>
         <p className='text-[#ababab] text-sm sm:text-base mt-2'>{formatDate(dateTime)}</p>
       </div>

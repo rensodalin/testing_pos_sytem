@@ -3,9 +3,34 @@ import { FaSearch } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
 import { FaBell } from "react-icons/fa";
 import logo from "../../assets/images/logo.png";
+import { useDispatch, useSelector } from "react-redux";
+import { IoLogOut } from "react-icons/io5";
+import { useMutation } from "@tanstack/react-query";
+import { logout } from "../../https";
+import { removeUser } from "../../redux/slices/userSlice";
+import { useNavigate } from "react-router-dom";
+import { MdDashboard } from "react-icons/md";
 
 
 const Header = () => {
+  const userData = useSelector(state => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logoutMutation  = useMutation ({
+    mutationFn: () => logout(),
+    onSuccess: (data) => {
+      console.log(data);
+      dispatch(removeUser());
+      navigate("/auth");
+    },
+    onError : (error) => {
+      console.log(error);
+      }
+  })
+  const handleLogout = () => {
+    logoutMutation.mutate();
+
+  }
 
   return (
     <header className="flex flex-col md:flex-row justify-between items-center py-4 px-4 md:px-8 bg-[#202a3e] space-y-4 md:space-y-0">
@@ -27,6 +52,14 @@ const Header = () => {
 
       {/* LOGGED USER DETAILS */}
       <div className="flex items-center gap-4">
+        {
+          userData.role == "Admin" && (
+            <div onClick={() => navigate("/dashboard")} className="bg-[#2e3e42] rounded-[15px] p-3 cursor-pointer">
+            <MdDashboard className="text-[#f5f5f5] text-2xl" />
+            </div>
+          )
+        }
+        
         <div className="bg-[#2e3e42] rounded-[15px] p-3 cursor-pointer">
           <FaBell className="text-[#f5f5f5] text-2xl" />
         </div>
@@ -34,12 +67,14 @@ const Header = () => {
           <FaUserCircle className="text-[#f5f5f5] text-4xl" />
           <div className="flex flex-col items-start">
             <h1 className="text-md text-[#f5f5f5] font-semibold tracking-wide">
-             Ren Sodalin
+             {userData.name || "TEST USER" }
             </h1>
             <p className="text-xs text-[#ababab] font-medium">
-            Admin
+            {userData.role ||  "Role" }
             </p>
           </div>
+          <IoLogOut onClick={handleLogout} className="text-[#f5f5f5] ml-2 cursor-pointer" size={40} />
+
         </div>
       </div>
     </header>
