@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { RiDeleteBin2Fill } from "react-icons/ri";
 import { FaNotesMedical } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
-import { removeItems } from "../../redux/slices/cartSlice";
+import { removeItem } from "../../redux/slices/cartSlice";
 
 const CartInfo = () => {
   const cartData = useSelector((state) => state.cart);
@@ -19,7 +19,7 @@ const CartInfo = () => {
   },[cartData]);
 
   const handleRemove = (itemId) => {
-    dispatch(removeItems(itemId));
+    dispatch(removeItem(itemId));
   }
 
   return (
