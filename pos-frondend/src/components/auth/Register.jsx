@@ -1,9 +1,14 @@
 import React, { useState } from "react";
-import { register } from "../../https";
+import { register, login } from "../../https";
 import { useMutation } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/slices/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const Register = ({setIsRegister}) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -29,24 +34,38 @@ const Register = ({setIsRegister}) => {
     mutationFn: (reqData) => register(reqData),
     onSuccess: (res) => {
       const { data } = res;
-      enqueueSnackbar(data.message, { variant: "success" });
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        password: "",
-        role: "",
-      });
+      enqueueSnackbar("Registration successful! Logging you in...", { variant: "success" });
       
-      setTimeout(() => {
-        setIsRegister(false);
-      }, 1500);
+      // Automatically log in the user after successful registration
+      const loginData = {
+        email: formData.email,
+        password: formData.password
+      };
+      
+      loginMutation.mutate(loginData);
     },
     onError: (error) => {
       const { response } = error;
-      const message = response.data.message;
+      const message = response?.data?.message || "Registration failed. Please try again.";
       enqueueSnackbar(message, { variant: "error" });
     },
+  });
+
+  const loginMutation = useMutation({
+    mutationFn: (reqData) => login(reqData),
+    onSuccess: (res) => {
+      const { data } = res;
+      console.log(data);
+      const { _id, name, email, phone, role } = data.data;
+      dispatch(setUser({ _id, name, email, phone, role }));
+      enqueueSnackbar("Welcome! You have been successfully registered and logged in.", { variant: "success" });
+      navigate("/");
+    },
+    onError: (error) => {
+      const { response } = error;
+      enqueueSnackbar("Registration successful but auto-login failed. Please log in manually.", { variant: "warning" });
+      setIsRegister(false);
+    }
   });
 
   return (
