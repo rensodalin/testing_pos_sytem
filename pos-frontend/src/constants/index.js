@@ -68,13 +68,13 @@ export const popularDishes = [
     },
     {
       id: 8,
-      image: gulabJamun,
+      image: pic8,
       name: 'Gulab Jamun',
       numberOfOrders: 310,
     },
     {
       id: 9,
-      image: pooriSabji,
+      image: pic9,
       name: 'Poori Sabji',
       numberOfOrders: 140,
     },
