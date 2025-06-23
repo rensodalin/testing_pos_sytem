@@ -28,8 +28,7 @@ const Register = ({setIsRegister}) => {
   const registerMutation = useMutation({
     mutationFn: (reqData) => register(reqData),
     onSuccess: (res) => {
-      const { data } = res;
-      enqueueSnackbar(data.message, { variant: "success" });
+      enqueueSnackbar("Registration successful (mock)", { variant: "success" });
       setFormData({
         name: "",
         email: "",
@@ -37,15 +36,12 @@ const Register = ({setIsRegister}) => {
         password: "",
         role: "",
       });
-      
       setTimeout(() => {
         setIsRegister(false);
       }, 1500);
     },
-    onError: (error) => {
-      const { response } = error;
-      const message = response.data.message;
-      enqueueSnackbar(message, { variant: "error" });
+    onError: () => {
+      enqueueSnackbar("Registration failed (mock)", { variant: "error" });
     },
   });
 

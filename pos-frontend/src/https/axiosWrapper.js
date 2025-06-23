@@ -1,12 +1,10 @@
-import axios from "axios";
+// This file previously handled axios setup for backend API calls.
+// All backend/API integration code has been removed for frontend-only operation.
 
-const defaultHeader = {
-  "Content-Type": "application/json",
-  Accept: "application/json",
+// Placeholder for axiosWrapper to avoid breaking imports.
+export const axiosWrapper = {
+  get: () => Promise.resolve({ data: {} }),
+  post: () => Promise.resolve({ data: {} }),
+  put: () => Promise.resolve({ data: {} }),
+  delete: () => Promise.resolve({ data: {} }),
 };
-
-export const axiosWrapper = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL,
-  withCredentials: true,
-  headers: { ...defaultHeader },
-});

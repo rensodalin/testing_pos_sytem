@@ -18,7 +18,6 @@ const Login = () => {
       setFormData({...formData, [e.target.name]: e.target.value});
     }
 
-  
     const handleSubmit = (e) => {
       e.preventDefault();
       loginMutation.mutate(formData);
@@ -28,62 +27,61 @@ const Login = () => {
       mutationFn: (reqData) => login(reqData),
       onSuccess: (res) => {
           const { data } = res;
-          console.log(data);
           const { _id, name, email, phone, role } = data.data;
           dispatch(setUser({ _id, name, email, phone, role }));
+          enqueueSnackbar("Login successful (mock)", { variant: "success" });
           navigate("/");
       },
-      onError: (error) => {
-        const { response } = error;
-        enqueueSnackbar(response.data.message, { variant: "error" });
+      onError: () => {
+        enqueueSnackbar("Login failed (mock)", { variant: "error" });
       }
     })
 
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
-            Employee Email
-          </label>
-          <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter employee email"
-              className="bg-transparent flex-1 text-white focus:outline-none"
-              required
-            />
+    return (
+      <div>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+              Employee Email
+            </label>
+            <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter employee email"
+                className="bg-transparent flex-1 text-white focus:outline-none"
+                required
+              />
+            </div>
           </div>
-        </div>
-        <div>
-          <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
-            Password
-          </label>
-          <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter password"
-              className="bg-transparent flex-1 text-white focus:outline-none"
-              required
-            />
+          <div>
+            <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+              Password
+            </label>
+            <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter password"
+                className="bg-transparent flex-1 text-white focus:outline-none"
+                required
+              />
+            </div>
           </div>
-        </div>
 
-        <button
-          type="submit"
-          className="w-full rounded-lg mt-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold"
-        >
-          Sign in
-        </button>
-      </form>
-    </div>
-  );
+          <button
+            type="submit"
+            className="w-full rounded-lg mt-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold"
+          >
+            Sign in
+          </button>
+        </form>
+      </div>
+    );
 };
 
 export default Login;

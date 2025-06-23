@@ -1,27 +1,16 @@
-import { axiosWrapper } from "./axiosWrapper";
+// This file previously handled API endpoint calls to the backend.
+// All backend/API integration code has been removed for frontend-only operation.
 
-// API Endpoints
-
-// Auth Endpoints
-export const login = (data) => axiosWrapper.post("/api/user/login", data);
-export const register = (data) => axiosWrapper.post("/api/user/register", data);
-export const getUserData = () => axiosWrapper.get("/api/user");
-export const logout = () => axiosWrapper.post("/api/user/logout");
-
-// Table Endpoints
-export const addTable = (data) => axiosWrapper.post("/api/table/", data);
-export const getTables = () => axiosWrapper.get("/api/table");
-export const updateTable = ({ tableId, ...tableData }) =>
-  axiosWrapper.put(`/api/table/${tableId}`, tableData);
-
-// Payment Endpoints
-export const createOrderRazorpay = (data) =>
-  axiosWrapper.post("/api/payment/create-order", data);
-export const verifyPaymentRazorpay = (data) =>
-  axiosWrapper.post("/api/payment//verify-payment", data);
-
-// Order Endpoints
-export const addOrder = (data) => axiosWrapper.post("/api/order/", data);
-export const getOrders = () => axiosWrapper.get("/api/order");
-export const updateOrderStatus = ({ orderId, orderStatus }) =>
-  axiosWrapper.put(`/api/order/${orderId}`, { orderStatus });
+// Mocked API functions for UI-only operation
+export const login = (data) => Promise.resolve({ data: { data: { _id: 'mock', name: 'Mock User', email: data.email, phone: '0000000000', role: 'admin' }, message: 'Login successful (mock)' } });
+export const register = (data) => Promise.resolve({ data: { message: 'Registration successful (mock)' } });
+export const getUserData = () => Promise.resolve({ data: { data: { _id: 'mock', name: 'Mock User', email: 'mock@example.com', phone: '0000000000', role: 'admin' } } });
+export const logout = () => Promise.resolve({ data: { message: 'Logout successful (mock)' } });
+export const addTable = (data) => Promise.resolve({ data: { message: 'Table added (mock)' } });
+export const getTables = () => Promise.resolve({ data: { data: [] } });
+export const updateTable = ({ tableId, ...tableData }) => Promise.resolve({ data: { message: 'Table updated (mock)' } });
+export const createOrderRazorpay = (data) => Promise.resolve({ data: { message: 'Order created (mock)' } });
+export const verifyPaymentRazorpay = (data) => Promise.resolve({ data: { message: 'Payment verified (mock)' } });
+export const addOrder = (data) => Promise.resolve({ data: { message: 'Order added (mock)' } });
+export const getOrders = () => Promise.resolve({ data: { data: [] } });
+export const updateOrderStatus = ({ orderId, orderStatus }) => Promise.resolve({ data: { message: 'Order status updated (mock)' } });

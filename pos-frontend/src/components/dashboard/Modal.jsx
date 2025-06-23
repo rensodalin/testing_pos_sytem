@@ -18,28 +18,23 @@ const Modal = ({ setIsTableModalOpen }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(tableData);
-    tableMutation.mutate(tableData);
+    addTableMutation.mutate(tableData);
   };
 
   const handleCloseModal = () => {
     setIsTableModalOpen(false);
   };
 
-  const tableMutation = useMutation({
+  const addTableMutation = useMutation({
     mutationFn: (reqData) => addTable(reqData),
-    onSuccess: (res) => {
+    onSuccess: () => {
         setIsTableModalOpen(false);
-        const { data } = res;
-        enqueueSnackbar(data.message, { variant: "success" })
+        enqueueSnackbar("Table added (mock)", { variant: "success" })
     },
-    onError: (error) => {
-        const { data } = error.response;
-        enqueueSnackbar(data.message, { variant: "error" })
-        console.log(error);
+    onError: () => {
+        enqueueSnackbar("Failed to add table (mock)", { variant: "error" })
     }
   })
-
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -51,7 +46,6 @@ const Modal = ({ setIsTableModalOpen }) => {
         className="bg-[#262626] p-6 rounded-lg shadow-lg w-96"
       >
         {/* Modal Header */}
-
         <div className="flex justify-between item-center mb-4">
           <h2 className="text-[#f5f5f5] text-xl font-semibold">Add Table</h2>
           <button
@@ -61,9 +55,7 @@ const Modal = ({ setIsTableModalOpen }) => {
             <IoMdClose size={24} />
           </button>
         </div>
-
         {/* Modal Body */}
-
         <form onSubmit={handleSubmit} className="space-y-4 mt-10">
           <div>
             <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
