@@ -20,22 +20,11 @@ const Login = () => {
 
     const handleSubmit = (e) => {
       e.preventDefault();
-      loginMutation.mutate(formData);
+      // Simulate login
+      dispatch(setUser({ _id: 'mock', name: 'Mock User', email: formData.email, phone: '0000000000', role: 'Admin', isAuth: true }));
+      enqueueSnackbar("Login successful (local only)", { variant: "success" });
+      navigate("/");
     }
-
-    const loginMutation = useMutation({
-      mutationFn: (reqData) => login(reqData),
-      onSuccess: (res) => {
-          const { data } = res;
-          const { _id, name, email, phone, role } = data.data;
-          dispatch(setUser({ _id, name, email, phone, role }));
-          enqueueSnackbar("Login successful (mock)", { variant: "success" });
-          navigate("/");
-      },
-      onError: () => {
-        enqueueSnackbar("Login failed (mock)", { variant: "error" });
-      }
-    })
 
     return (
       <div>

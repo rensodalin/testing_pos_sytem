@@ -1,5 +1,4 @@
-// This file previously handled API endpoint calls to the backend.
-// All backend/API integration code has been removed for frontend-only operation.
+// Deprecated: No longer used. All backend/API logic has been removed. Use constants and local state only.
 
 // Mocked API functions for UI-only operation
 export const login = (data) => Promise.resolve({ data: { data: { _id: 'mock', name: 'Mock User', email: data.email, phone: '0000000000', role: 'admin' }, message: 'Login successful (mock)' } });

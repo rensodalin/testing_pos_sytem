@@ -49,7 +49,7 @@ const Home = () => {
   }, []);
 
   return (
-    <section className="bg-[#192637] min-h-[calc(100vh-5rem)] overflow-y-auto flex flex-col lg:flex-row gap-3 pb-20">
+    <section className="bg-[#1f1f1f] min-h-[calc(100vh-5rem)] overflow-y-auto flex flex-col lg:flex-row gap-3 pb-20">
       {/* Left Div */}
       <div className="flex-[3]">
         <Greetings />

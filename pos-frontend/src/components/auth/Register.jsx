@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { register } from "../../https";
-import { useMutation } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 
 const Register = ({setIsRegister}) => {
@@ -22,28 +20,11 @@ const Register = ({setIsRegister}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    registerMutation.mutate(formData);
+    // Simulate registration
+    enqueueSnackbar("Registration successful (local only)", { variant: "success" });
+    setFormData({ name: "", email: "", phone: "", password: "", role: "" });
+    setTimeout(() => { setIsRegister(false); }, 1500);
   };
-
-  const registerMutation = useMutation({
-    mutationFn: (reqData) => register(reqData),
-    onSuccess: (res) => {
-      enqueueSnackbar("Registration successful (mock)", { variant: "success" });
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        password: "",
-        role: "",
-      });
-      setTimeout(() => {
-        setIsRegister(false);
-      }, 1500);
-    },
-    onError: () => {
-      enqueueSnackbar("Registration failed (mock)", { variant: "error" });
-    },
-  });
 
   return (
     <div>
