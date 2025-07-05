@@ -1,22 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import OrderList from "./OrderList";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { enqueueSnackbar } from "notistack";
-import { getOrders } from "../../https/index";
+import { useSelector } from "react-redux";
+import { selectRecentOrders } from "../../redux/slices/ordersSlice";
 
 const RecentOrders = () => {
-  const { data: resData, isError } = useQuery({
-    queryKey: ["orders"],
-    queryFn: async () => {
-      return await getOrders();
-    },
-    placeholderData: keepPreviousData,
-  });
+  const [searchTerm, setSearchTerm] = useState("");
+  const recentOrders = useSelector(selectRecentOrders);
 
-  if (isError) {
-    enqueueSnackbar("Something went wrong!", { variant: "error" });
-  }
+  // Filter orders based on search term
+  const filteredOrders = recentOrders.filter(order =>
+    order.customer?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.status?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="px-8 mt-6">
@@ -35,18 +32,22 @@ const RecentOrders = () => {
           <input
             type="text"
             placeholder="Search recent orders"
-            className="bg-[#1f1f1f] outline-none text-[#f5f5f5]"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="bg-[#1f1f1f] outline-none text-[#f5f5f5] flex-1"
           />
         </div>
 
         {/* Order list */}
         <div className="mt-4 px-6 overflow-y-scroll h-[300px] scrollbar-hide">
-          {resData?.data.data.length > 0 ? (
-            resData.data.data.map((order) => {
-              return <OrderList key={order._id} order={order} />;
+          {filteredOrders.length > 0 ? (
+            filteredOrders.map((order) => {
+              return <OrderList key={order.id} order={order} />;
             })
           ) : (
-            <p className="col-span-3 text-gray-500">No orders available</p>
+            <p className="col-span-3 text-gray-500 text-center py-8">
+              {searchTerm ? "No orders found matching your search" : "No orders available"}
+            </p>
           )}
         </div>
       </div>

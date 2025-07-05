@@ -20,9 +20,20 @@ const Login = () => {
 
     const handleSubmit = (e) => {
       e.preventDefault();
-      // Simulate login
-      dispatch(setUser({ _id: 'mock', name: 'Mock User', email: formData.email, phone: '0000000000', role: 'Admin', isAuth: true }));
-      enqueueSnackbar("Login successful (local only)", { variant: "success" });
+      // Simulate staff login
+      const staffData = {
+        _id: 'staff_' + Date.now(),
+        name: 'Staff User',
+        email: formData.email,
+        phone: '0000000000',
+        role: 'admin',
+        isCustomer: false,
+        address: '',
+        preferences: [],
+        loyaltyPoints: 0
+      };
+      dispatch(setUser(staffData));
+      enqueueSnackbar("Staff login successful!", { variant: "success" });
       navigate("/");
     }
 

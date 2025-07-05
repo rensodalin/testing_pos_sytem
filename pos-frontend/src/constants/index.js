@@ -198,24 +198,6 @@ export const tables = [
     },
     {
       id: 3,
-      name: "Pineapple Juice",
-      price: 130,
-      category: "Fresh"
-    },
-    {
-      id: 4,
-      name: "Watermelon Juice",
-      price: 100,
-      category: "Fresh"
-    },
-    {
-      id: 5,
-      name: "Mango Juice",
-      price: 140,
-      category: "Fresh"
-    },
-    {
-      id: 6,
       name: "Pomegranate Juice",
       price: 160,
       category: "Fresh"
@@ -289,7 +271,7 @@ export const tables = [
     {
       id: 6,
       name: "Cocktail",
-      price: 400,
+      price: 500,
       category: "Alcoholic"
     }
   ];
@@ -376,43 +358,4 @@ export const itemsData = [
   { title: "Total Dishes", value: "50", percentage: "12%", color: "#285430", isIncrease: true },
   { title: "Active Orders", value: "12", percentage: "12%", color: "#735f32", isIncrease: true },
   { title: "Total Tables", value: "10", color: "#7f167f"}
-];
-
-export const orders = [
-  {
-    id: "101",
-    customer: "Amrit Raj",
-    status: "Ready",
-    dateTime: "January 18, 2025 08:32 PM",
-    items: 8,
-    tableNo: 3,
-    total: 250.0,
-  },
-  {
-    id: "102",
-    customer: "John Doe",
-    status: "In Progress",
-    dateTime: "January 18, 2025 08:45 PM",
-    items: 5,
-    tableNo: 4,
-    total: 180.0,
-  },
-  {
-    id: "103",
-    customer: "Emma Smith",
-    status: "Ready",
-    dateTime: "January 18, 2025 09:00 PM",
-    items: 3,
-    tableNo: 5,
-    total: 120.0,
-  },
-  {
-    id: "104",
-    customer: "Chris Brown",
-    status: "In Progress",
-    dateTime: "January 18, 2025 09:15 PM",
-    items: 6,
-    tableNo: 6,
-    total: 220.0,
-  },
 ];

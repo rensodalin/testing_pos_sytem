@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import restaurant from "../assets/images/restaurant-img.jpg"
-import logo from "../assets/images/logo.png"
-import Register from "../components/auth/Register";
-import Login from "../components/auth/Login";
+import restaurant from "../assets/images/restaurant-img.jpg";
+import logo from "../assets/images/logo.png";
+import CustomerRegister from "../components/auth/CustomerRegister";
+import CustomerLogin from "../components/auth/CustomerLogin";
 
-const Auth = () => {
-
+const CustomerAuth = () => {
   useEffect(() => {
-    document.title = "POS | Auth"
-  }, [])
+    document.title = "Cafio | Customer Auth";
+  }, []);
 
   const [isRegister, setIsRegister] = useState(false);
 
@@ -24,26 +23,25 @@ const Auth = () => {
 
         {/* Quote at bottom */}
         <blockquote className="absolute bottom-10 px-8 mb-10 text-2xl italic text-white">
-          "Serve customers the best food with prompt and friendly service in a
-          welcoming atmosphere, and they'll keep coming back."
+          "Experience the finest coffee and cuisine delivered right to your doorstep."
           <br />
-          <span className="block mt-4 text-yellow-400">- Founder of Restro</span>
+          <span className="block mt-4 text-yellow-400">- Cafio Team</span>
         </blockquote>
       </div>
 
       {/* Right Section */}
       <div className="w-1/2 min-h-screen bg-[#1a1a1a] p-10">
         <div className="flex flex-col items-center gap-2">
-          <img src={logo} alt="Restro Logo" className="h-14 w-14 border-2 rounded-full p-1" />
+          <img src={logo} alt="Cafio Logo" className="h-14 w-14 border-2 rounded-full p-1" />
           <h1 className="text-lg font-semibold text-[#f5f5f5] tracking-wide">Cafio</h1>
         </div>
 
         <h2 className="text-4xl text-center mt-10 font-semibold text-yellow-400 mb-10">
-          {isRegister ? "Employee Registration" : "Employee Login"}
+          {isRegister ? "Customer Registration" : "Customer Login"}
         </h2>
 
-        {/* Components */}  
-        {isRegister ? <Register setIsRegister={setIsRegister} /> : <Login />}
+        {/* Components */}
+        {isRegister ? <CustomerRegister setIsRegister={setIsRegister} /> : <CustomerLogin setIsRegister={setIsRegister} />}
 
         {/* Toggle between login and register */}
         <div className="text-center mt-6">
@@ -58,24 +56,13 @@ const Auth = () => {
           </p>
         </div>
 
-        {/* Customer Login Link */}
-        <div className="text-center mt-8 pt-6 border-t border-[#333]">
-          <p className="text-[#ababab] mb-2">Are you a customer?</p>
-          <button
-            onClick={() => window.location.href = '/customer/auth'}
-            className="text-yellow-400 hover:underline font-medium"
-          >
-            Login as Customer →
-          </button>
-        </div>
-
-        {/* Back to landing */}
+        {/* Back to main auth */}
         <div className="text-center mt-4">
           <button
-            onClick={() => window.location.href = '/landing'}
+            onClick={() => window.history.back()}
             className="text-[#ababab] hover:text-yellow-400 text-sm"
           >
-            ← Back to landing page
+            ← Back to main login
           </button>
         </div>
       </div>
@@ -83,4 +70,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default CustomerAuth; 

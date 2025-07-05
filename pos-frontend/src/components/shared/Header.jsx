@@ -1,107 +1,3 @@
-// import React, { useState } from "react";
-// import { FaSearch } from "react-icons/fa";
-// import { FaUserCircle } from "react-icons/fa";
-// import { FaBell } from "react-icons/fa";
-// import logo from "../../assets/images/logo.png";
-// import { useDispatch, useSelector } from "react-redux";
-// import { IoLogOut } from "react-icons/io5";
-// import { useMutation } from "@tanstack/react-query";
-// import { logout } from "../../https";
-// import { removeUser } from "../../redux/slices/userSlice";
-// import { useNavigate } from "react-router-dom";
-// import { MdDashboard } from "react-icons/md";
-
-// const Header = () => {
-//   const userData = useSelector((state) => state.user);
-//   const dispatch = useDispatch();
-//   const navigate = useNavigate();
-//   const [search, setSearch] = useState("");
-
-//   const logoutMutation = useMutation({
-//     mutationFn: () => logout(),
-//     onSuccess: () => {
-//       dispatch(removeUser());
-//       navigate("/auth");
-//     },
-//     onError: () => {
-//       // No backend, so just remove user
-//       dispatch(removeUser());
-//       navigate("/auth");
-//     },
-//   });
-
-//   const handleLogout = () => {
-//     logoutMutation.mutate();
-//   };
-
-//   const handleSearch = (e) => {
-//     e.preventDefault();
-//     if (search.trim()) {
-//       navigate("/menu", { state: { search } });
-//     }
-//   };
-
-//   return (
-//     <header className="flex flex-col sm:flex-row justify-between items-center py-4 px-4 sm:px-8 bg-[#1a1a1a] gap-3 sm:gap-0">
-//       {/* LOGO */}
-//       <div onClick={() => navigate("/")} className="flex items-center gap-2 cursor-pointer mb-2 sm:mb-0">
-//         <img src={logo} className="h-8 w-8" alt="restro logo" />
-//         <h1 className="text-lg font-semibold text-[#f5f5f5] tracking-wide">
-//           Cafio
-//         </h1>
-//       </div>
-
-//       {/* SEARCH - Responsive */}
-//       <form
-//         onSubmit={handleSearch}
-//         className="flex items-center gap-2 bg-[#1f1f1f] rounded-[15px] px-3 sm:px-5 py-2 w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl"
-//       >
-//         <input
-//           type="text"
-//           value={search}
-//           onChange={(e) => setSearch(e.target.value)}
-//           placeholder="Search menu..."
-//           className="bg-[#1f1f1f] outline-none text-[#f5f5f5] w-full text-sm sm:text-base"
-//         />
-//         <button type="submit" className="p-2">
-//           <FaSearch className="text-[#f5f5f5] text-lg" />
-//         </button>
-//       </form>
-
-//       {/* LOGGED USER DETAILS */}
-//       <div className="flex items-center gap-2 sm:gap-4 mt-2 sm:mt-0">
-//         <div
-//           onClick={() => navigate("/dashboard")}
-//           className="flex items-center gap-2 bg-[#1f1f1f] rounded-[15px] p-2 sm:p-3 cursor-pointer hover:bg-[#262626] transition-colors"
-//         >
-//           <MdDashboard className="text-[#f5f5f5] text-xl sm:text-2xl" />
-//           <span className="text-[#f5f5f5] font-semibold hidden sm:inline">Admin Dashboard</span>
-//         </div>
-//         <div className="bg-[#1f1f1f] rounded-[15px] p-2 sm:p-3 cursor-pointer">
-//           <FaBell className="text-[#f5f5f5] text-xl sm:text-2xl" />
-//         </div>
-//         <div className="flex items-center gap-2 sm:gap-3 cursor-pointer">
-//           <FaUserCircle className="text-[#f5f5f5] text-3xl sm:text-4xl" />
-//           <div className="flex flex-col items-start">
-//             <h1 className="text-sm sm:text-md text-[#f5f5f5] font-semibold tracking-wide">
-//               {userData.name || "TEST USER"}
-//             </h1>
-//             <p className="text-xs text-[#ababab] font-medium">
-//               {userData.role || "Role"}
-//             </p>
-//           </div>
-//           <IoLogOut
-//             onClick={handleLogout}
-//             className="text-[#f5f5f5] ml-2"
-//             size={32}
-//           />
-//         </div>
-//       </div>
-//     </header>
-//   );
-// };
-
-// export default Header;
 import React, { useState } from "react";
 import { FaSearch, FaUserCircle, FaBell } from "react-icons/fa";
 import { IoLogOut } from "react-icons/io5";
@@ -136,7 +32,19 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (search.trim()) {
-      navigate("/menu", { state: { search } });
+      if (userData.isCustomer) {
+        navigate("/customer/menu", { state: { search } });
+      } else {
+        navigate("/menu", { state: { search } });
+      }
+    }
+  };
+
+  const handleLogoClick = () => {
+    if (userData.isCustomer) {
+      navigate("/customer/dashboard");
+    } else {
+      navigate("/");
     }
   };
 
@@ -144,49 +52,56 @@ const Header = () => {
     <header className="bg-[#1a1a1a] w-full px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center sm:justify-between gap-3 sm:gap-0">
       {/* Logo Section */}
       <div
-        onClick={() => navigate("/")}
+        onClick={handleLogoClick}
         className="flex items-center gap-2 cursor-pointer"
       >
         <img src={logo} alt="restro logo" className="h-8 w-8" />
         <h1 className="text-lg sm:text-xl font-semibold text-[#f5f5f5]">
           Cafio
         </h1>
+        {userData.isCustomer && (
+          <span className="bg-yellow-400 text-gray-900 px-2 py-1 rounded text-xs font-medium">
+            Customer
+          </span>
+        )}
       </div>
 
-      {/* Search Bar */}
-      <form
-        onSubmit={handleSearch}
-        className="w-full sm:w-auto flex-grow sm:flex-grow-0 flex items-center bg-[#1f1f1f] rounded-[15px] px-4 py-2"
-      >
-        <input
-          type="text"
-          placeholder="Search menu..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="flex-grow bg-transparent text-[#f5f5f5] outline-none text-sm sm:text-base placeholder:text-[#888]"
-        />
-        <button type="submit">
-          <FaSearch className="text-[#f5f5f5] text-base sm:text-lg" />
-        </button>
-      </form>
+      {/* Search Bar - Only show for admin */}
+      {!userData.isCustomer && (
+        <div className="flex-1 max-w-md mx-4">
+          <form onSubmit={handleSearch} className="relative">
+            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#ababab]" />
+            <input
+              type="text"
+              placeholder="Search menu items..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-[#262626] text-white pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            />
+          </form>
+        </div>
+      )}
 
-      {/* User Section */}
-      <div className="flex flex-wrap sm:flex-nowrap items-center justify-center gap-2 sm:gap-3">
-        {/* Dashboard Shortcut */}
-        <div
-          onClick={() => navigate("/dashboard")}
-          className="flex items-center gap-2 bg-[#1f1f1f] px-3 py-2 rounded-[15px] cursor-pointer hover:bg-[#262626] transition-colors"
-        >
-          <MdDashboard className="text-[#f5f5f5] text-lg sm:text-xl" />
-          <span className="hidden sm:inline text-sm sm:text-base font-medium text-[#f5f5f5]">
-            Admin Dashboard
+      {/* Right Section */}
+      <div className="flex items-center gap-4">
+        {/* Notifications */}
+        <div className="relative">
+          <FaBell className="text-[#f5f5f5] text-xl cursor-pointer" />
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+            2
           </span>
         </div>
 
-        {/* Notifications */}
-        <div className="bg-[#1f1f1f] p-2 rounded-[15px] cursor-pointer">
-          <FaBell className="text-[#f5f5f5] text-lg sm:text-xl" />
-        </div>
+        {/* Dashboard Button - Only show for admin */}
+        {!userData.isCustomer && (
+          <button
+            onClick={() => navigate("/dashboard")}
+            className="bg-[#262626] text-[#f5f5f5] px-4 py-2 rounded-lg hover:bg-[#333] transition-colors flex items-center gap-2"
+          >
+            <MdDashboard />
+            <span className="hidden sm:inline">Dashboard</span>
+          </button>
+        )}
 
         {/* User Info */}
         <div className="flex items-center gap-2 cursor-pointer">
@@ -196,7 +111,12 @@ const Header = () => {
               {userData.name || "TEST USER"}
             </h1>
             <p className="text-xs sm:text-sm text-[#ababab]">
-              {userData.role || "Role"}
+              {userData.isCustomer ? "Customer" : userData.role || "Role"}
+              {userData.isCustomer && userData.loyaltyPoints && (
+                <span className="ml-2 text-yellow-400">
+                  {userData.loyaltyPoints} pts
+                </span>
+              )}
             </p>
           </div>
           <IoLogOut

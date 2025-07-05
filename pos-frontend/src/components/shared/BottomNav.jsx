@@ -6,7 +6,9 @@ import { BiSolidDish } from "react-icons/bi";
 import { useNavigate, useLocation } from "react-router-dom";
 import Modal from "./Modal";
 import { useDispatch } from "react-redux";
-import { setCustomer } from "../../redux/slices/customerSlice";
+import { setCustomer, updateTable } from "../../redux/slices/customerSlice";
+import { tables } from '../../constants';
+import { enqueueSnackbar } from "notistack";
 
 const BottomNav = () => {
   const navigate = useNavigate();
@@ -14,8 +16,9 @@ const BottomNav = () => {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [guestCount, setGuestCount] = useState(0);
-  const [name, setName] = useState();
-  const [phone, setPhone] = useState();
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [selectedTable, setSelectedTable] = useState("");
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -31,10 +34,45 @@ const BottomNav = () => {
 
   const isActive = (path) => location.pathname === path;
 
+  const availableTables = tables.filter((t) => t.status === "Available");
+
   const handleCreateOrder = () => {
-    // send the data to store
-    dispatch(setCustomer({name, phone, guests: guestCount}));
-    navigate("/tables");
+    if (!name.trim()) {
+      enqueueSnackbar("Please enter customer name", { variant: "warning" });
+      return;
+    }
+    
+    if (!phone.trim()) {
+      enqueueSnackbar("Please enter customer phone", { variant: "warning" });
+      return;
+    }
+    
+    if (!selectedTable) {
+      enqueueSnackbar("Please select a table", { variant: "warning" });
+      return;
+    }
+
+    // Set up customer information
+    dispatch(setCustomer({ name, phone, guests: guestCount }));
+    
+    // Set up table information
+    const selectedTableData = tables.find(t => t.id === parseInt(selectedTable));
+    if (selectedTableData) {
+      const table = { tableId: selectedTableData.id, tableNo: selectedTableData.name };
+      dispatch(updateTable({ table }));
+    }
+    
+    // Navigate to menu
+    navigate("/menu");
+    
+    // Close modal and reset form
+    closeModal();
+    setName("");
+    setPhone("");
+    setGuestCount(0);
+    setSelectedTable("");
+    
+    enqueueSnackbar("Customer information set up successfully!", { variant: "success" });
   }
 
   return (
@@ -94,6 +132,23 @@ const BottomNav = () => {
             <button onClick={decrement} className="text-yellow-500 text-2xl">&minus;</button>
             <span className="text-white">{guestCount} Person</span>
             <button onClick={increment} className="text-yellow-500 text-2xl">&#43;</button>
+          </div>
+        </div>
+        <div>
+          <label className="block text-gray-500 mb-2 mt-3 text-sm font-medium">Select Table</label>
+          <div className="flex items-center rounded-lg p-3 px-4 bg-gray-500">
+            <select
+              value={selectedTable}
+              onChange={(e) => setSelectedTable(e.target.value)}
+              className="bg-transparent flex-1 text-black  focus:outline-none"
+            >
+              <option value="">-- Select an available table --</option>
+              {availableTables.map((table) => (
+                <option key={table.id} value={table.id}>
+                  {table.name} (Seats: {table.seats})
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <button onClick={handleCreateOrder} className="w-full bg-[#F6B100] text-[#f5f5f5] rounded-lg py-3 mt-8 hover:bg-yellow-700">
