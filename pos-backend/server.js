@@ -13,11 +13,11 @@ const db = require("./models");
 // Import routes
 const authRoutes = require("./routes/authRoutes");
 const customerAuthRoutes = require("./routes/customerAuthRoutes");
-
+const orderRoutes = require("./routes/orderRoutes");
 // Mount routes
 app.use("/api/auth", authRoutes);
 app.use("/api/auth/customer", customerAuthRoutes);
-
+app.use("/api/orders", orderRoutes);
 // Test route
 app.get("/", (req, res) => {
   res.json({ message: "Coffee POS Backend API is running!" });

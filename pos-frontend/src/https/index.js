@@ -25,6 +25,8 @@ export const register = (data) => API.post("/auth/register", data);
 // Auth for customers
 export const registerCustomer = (data) => API.post("/auth/customer/register", data);
 export const loginCustomer = (data) => API.post("/auth/customer/login", data);
-
+export const createOrder = (data) => API.post("/orders", data);
+// https/index.js
+export const getOrders = () => API.get("/orders");
 export const logout = () => Promise.resolve();
 

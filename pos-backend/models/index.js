@@ -21,5 +21,5 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.User = require("./User")(sequelize, Sequelize);
-
+db.Order = require("./Order")(sequelize, Sequelize);
 module.exports = db;
