@@ -22,7 +22,9 @@ const CustomerLogin = () => {
     try {
       const response = await loginCustomer(formData);
       const { user, token } = response.data.data;
-      dispatch(setUser({ ...user, token }));
+      // Convert id to _id for consistency with frontend
+      const userData = { ...user, _id: user.id, token };
+      dispatch(setUser(userData));
       enqueueSnackbar("Customer login successful!", { variant: "success" });
       navigate("/customer/dashboard");
     } catch (error) {

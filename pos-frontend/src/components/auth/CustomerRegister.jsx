@@ -35,7 +35,9 @@ const CustomerRegister = () => {
     try {
       const response = await registerCustomer(formData);
       const { user, token } = response.data.data;
-      dispatch(setUser({ ...user, token }));
+      // Convert id to _id for consistency with frontend
+      const userData = { ...user, _id: user.id, token };
+      dispatch(setUser(userData));
       enqueueSnackbar("Customer registration successful!", { variant: "success" });
       navigate("/customer/dashboard");
     } catch (error) {

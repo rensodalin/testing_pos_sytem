@@ -10,11 +10,14 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
 
-router.post("/register", authController.register);  // ← rename your controller to match this
-router.post("/login", authController.login);
-router.post("/customer/register", authController.register); // uses same register function
-router.post("/customer/login", authController.login);       // uses same login function
+// Mounted at /api/auth/customer in server.js
+router.post("/register", authController.registerStaff);
+router.post("/login", authController.loginStaff);
+router.post("/register", authController.registerCustomer);
+router.post("/login", authController.loginCustomer);
+
 module.exports = router;
+
 
 
 
