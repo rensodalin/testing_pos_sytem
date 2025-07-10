@@ -1,19 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import BottomNav from "../components/shared/BottomNav";
 import OrderCard from "../components/orders/OrderCard";
 import BackButton from "../components/shared/BackButton";
-import { selectOrdersByStatus } from "../redux/slices/ordersSlice";
+import { getOrders } from "../https"; // <-- import your API call
 
 const Orders = () => {
   const [status, setStatus] = useState("all");
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = "POS | Orders";
   }, []);
 
-  // Get orders from Redux store
-  const orders = useSelector((state) => selectOrdersByStatus(state, status));
+  useEffect(() => {
+    const fetchOrders = async () => {
+      setLoading(true);
+      try {
+        const response = await getOrders();
+        // Assume your API response contains orders in response.data
+        const fetchedOrders = Array.isArray(response.data)
+          ? response.data
+          : [];
+
+        setOrders(fetchedOrders);
+      } catch (error) {
+        console.error("Failed to fetch orders:", error);
+        setOrders([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []); // Fetch orders once on mount
+
+  // Filter orders by status (client side)
+  const filteredOrders =
+    status === "all"
+      ? orders
+      : orders.filter(
+          (order) =>
+            order.status?.toLowerCase() === status.toLowerCase()
+        );
 
   return (
     <section className="bg-[#1f1f1f] min-h-screen scrollbar-hide overflow-y-auto">
@@ -33,8 +62,8 @@ const Orders = () => {
               key={type}
               onClick={() => setStatus(type)}
               className={`text-[#ababab] text-xs sm:text-sm md:text-base ${
-                status === type 
-                  ? "bg-[#383838] text-white" 
+                status === type
+                  ? "bg-[#383838] text-white"
                   : "hover:bg-[#2a2a2a] hover:text-white"
               } rounded-lg px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 font-semibold whitespace-nowrap flex-shrink-0 transition-all duration-200 border ${
                 status === type ? "border-[#4a4a4a]" : "border-transparent"
@@ -52,36 +81,44 @@ const Orders = () => {
 
       {/* Orders Grid - Responsive with proper spacing */}
       <div className="pb-20 lg:pb-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6 p-3 sm:p-4 md:p-6 lg:p-8">
-          {orders.length > 0 ? (
-            orders.map((order) => (
-              <div key={order.id} className="w-full">
-                <OrderCard order={order} />
-              </div>
-            ))
-          ) : (
-            <div className="col-span-full text-center py-8 sm:py-12 lg:py-16">
-              <div className="max-w-md mx-auto">
-                <p className="text-gray-400 text-base sm:text-lg lg:text-xl font-medium">
-                  No orders available
-                </p>
-                {status !== "all" && (
-                  <p className="text-gray-500 text-sm sm:text-base mt-2">
-                    No {status === "In Progress" ? "in progress" : status.toLowerCase()} orders found
+        {loading ? (
+          <div className="text-center text-gray-400 py-8">Loading orders...</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6 p-3 sm:p-4 md:p-6 lg:p-8">
+            {filteredOrders.length > 0 ? (
+              filteredOrders.map((order) => (
+                <div key={order.id} className="w-full">
+                  <OrderCard order={order} />
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-8 sm:py-12 lg:py-16">
+                <div className="max-w-md mx-auto">
+                  <p className="text-gray-400 text-base sm:text-lg lg:text-xl font-medium">
+                    No orders available
                   </p>
-                )}
-                <div className="mt-4">
-                  <button
-                    onClick={() => setStatus("all")}
-                    className="text-blue-400 hover:text-blue-300 text-sm underline transition-colors"
-                  >
-                    View all orders
-                  </button>
+                  {status !== "all" && (
+                    <p className="text-gray-500 text-sm sm:text-base mt-2">
+                      No{" "}
+                      {status === "In Progress"
+                        ? "in progress"
+                        : status.toLowerCase()}{" "}
+                      orders found
+                    </p>
+                  )}
+                  <div className="mt-4">
+                    <button
+                      onClick={() => setStatus("all")}
+                      className="text-blue-400 hover:text-blue-300 text-sm underline transition-colors"
+                    >
+                      View all orders
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Bottom Navigation */}
@@ -91,4 +128,3 @@ const Orders = () => {
 };
 
 export default Orders;
-
