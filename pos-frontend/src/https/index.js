@@ -1,15 +1,30 @@
-// Deprecated: No longer used. All backend/API logic has been removed. Use constants and local state only.
+// // https/index.js
+// import axios from "axios";
+// const API = axios.create({ baseURL: "http://localhost:5000/api" });
 
-// Mocked API functions for UI-only operation
-export const login = (data) => Promise.resolve({ data: { data: { _id: 'mock', name: 'Mock User', email: data.email, phone: '0000000000', role: 'admin' }, message: 'Login successful (mock)' } });
-export const register = (data) => Promise.resolve({ data: { message: 'Registration successful (mock)' } });
-export const getUserData = () => Promise.resolve({ data: { data: { _id: 'mock', name: 'Mock User', email: 'mock@example.com', phone: '0000000000', role: 'admin' } } });
-export const logout = () => Promise.resolve({ data: { message: 'Logout successful (mock)' } });
-export const addTable = (data) => Promise.resolve({ data: { message: 'Table added (mock)' } });
-export const getTables = () => Promise.resolve({ data: { data: [] } });
-export const updateTable = ({ tableId, ...tableData }) => Promise.resolve({ data: { message: 'Table updated (mock)' } });
-export const createOrderRazorpay = (data) => Promise.resolve({ data: { message: 'Order created (mock)' } });
-export const verifyPaymentRazorpay = (data) => Promise.resolve({ data: { message: 'Payment verified (mock)' } });
-export const addOrder = (data) => Promise.resolve({ data: { message: 'Order added (mock)' } });
-export const getOrders = () => Promise.resolve({ data: { data: [] } });
-export const updateOrderStatus = ({ orderId, orderStatus }) => Promise.resolve({ data: { message: 'Order status updated (mock)' } });
+// export const login = (data) => API.post("/auth/login", data);
+// export const register = (data) => API.post("/auth/register", data);
+
+
+// export const logout = () => {
+//   // Optional: clear anything if needed, e.g., tokens
+//   return Promise.resolve(); // allows react-query `useMutation` to work
+// };
+
+
+import axios from "axios";
+
+const API = axios.create({
+  baseURL: "http://localhost:5000/api",
+});
+
+// Auth for employees/admin
+export const login = (data) => API.post("/auth/login", data);
+export const register = (data) => API.post("/auth/register", data);
+
+// Auth for customers
+export const registerCustomer = (data) => API.post("/auth/customer/register", data);
+export const loginCustomer = (data) => API.post("/auth/customer/login", data);
+
+export const logout = () => Promise.resolve();
+

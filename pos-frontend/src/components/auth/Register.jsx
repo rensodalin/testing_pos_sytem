@@ -3,6 +3,7 @@ import { enqueueSnackbar } from "notistack";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../../redux/slices/userSlice";
+import { register } from "../../https/index";
 
 const Register = ({setIsRegister}) => {
   const dispatch = useDispatch();
@@ -23,29 +24,24 @@ const Register = ({setIsRegister}) => {
     setFormData({ ...formData, role: selectedRole });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.role) {
       enqueueSnackbar("Please select a role!", { variant: "warning" });
       return;
     }
-    
-    // Simulate staff registration
-    const staffData = {
-      _id: 'staff_' + Date.now(),
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      role: formData.role.toLowerCase(),
-      isCustomer: false,
-      address: '',
-      preferences: [],
-      loyaltyPoints: 0
-    };
-    
-    dispatch(setUser(staffData));
-    enqueueSnackbar("Staff registration successful!", { variant: "success" });
-    navigate("/");
+    try {
+      const response = await register(formData);
+      const { user, token } = response.data.data;
+      dispatch(setUser({ ...user, token }));
+      enqueueSnackbar("Registration successful!", { variant: "success" });
+      navigate("/");
+    } catch (error) {
+      enqueueSnackbar(
+        error?.response?.data?.message || "Registration failed!",
+        { variant: "error" }
+      );
+    }
   };
 
   return (

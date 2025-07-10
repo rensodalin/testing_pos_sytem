@@ -18,23 +18,20 @@ const Login = () => {
       setFormData({...formData, [e.target.name]: e.target.value});
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
-      // Simulate staff login
-      const staffData = {
-        _id: 'staff_' + Date.now(),
-        name: 'Staff User',
-        email: formData.email,
-        phone: '0000000000',
-        role: 'admin',
-        isCustomer: false,
-        address: '',
-        preferences: [],
-        loyaltyPoints: 0
-      };
-      dispatch(setUser(staffData));
-      enqueueSnackbar("Staff login successful!", { variant: "success" });
-      navigate("/");
+      try {
+        const response = await login(formData);
+        const { user, token } = response.data.data;
+        dispatch(setUser({ ...user, token }));
+        enqueueSnackbar("Login successful!", { variant: "success" });
+        navigate("/");
+      } catch (error) {
+        enqueueSnackbar(
+          error?.response?.data?.message || "Login failed!",
+          { variant: "error" }
+        );
+      }
     }
 
     return (
