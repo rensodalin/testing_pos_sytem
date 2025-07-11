@@ -1,7 +1,19 @@
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { selectRecentOrders } from "../../redux/slices/ordersSlice";
+import React, { useEffect, useState } from "react";
 import { getOrders } from "../../https";
+
+// Utility function to format date safely
+const formatDateAndTime = (dateString) => {
+  if (!dateString) return "N/A";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "N/A";
+  return date.toLocaleString("en-GB", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 
 const RecentOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -10,8 +22,8 @@ const RecentOrders = () => {
     const fetchOrders = async () => {
       try {
         const response = await getOrders();
-        console.log("Fetched orders:", response); // ✅ For debugging
-        setOrders(response); // 👈 store the fetched data
+        console.log("Fetched orders:", response.data); // For debugging
+        setOrders(response.data);
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
@@ -22,9 +34,7 @@ const RecentOrders = () => {
 
   return (
     <div className="container mx-auto bg-[#262626] p-4 rounded-lg">
-      <h2 className="text-[#f5f5f5] text-xl font-semibold mb-4">
-        Recent Orders
-      </h2>
+      <h2 className="text-[#f5f5f5] text-xl font-semibold mb-4">Recent Orders</h2>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-[#f5f5f5]">
           <thead className="bg-[#333] text-[#ababab]">
@@ -32,9 +42,9 @@ const RecentOrders = () => {
               <th className="p-3">Order ID</th>
               <th className="p-3">Customer</th>
               <th className="p-3">Status</th>
-              <th className="p-3">Type</th>
+              <th className="p-3">Guests</th>
               <th className="p-3">Table</th>
-              <th className="p-3">Total</th>
+              <th className="p-3">Phone</th>
               <th className="p-3">Date</th>
             </tr>
           </thead>
@@ -62,25 +72,11 @@ const RecentOrders = () => {
                       {order.status}
                     </span>
                   </td>
-                  <td className="p-3 text-sm">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        order.orderType === "online"
-                          ? "bg-purple-600 text-white"
-                          : "bg-blue-600 text-white"
-                      }`}
-                    >
-                      {order.orderType}
-                    </span>
-                  </td>
-                  <td className="p-3 text-sm">
-                    {order.orderType === "online" ? "N/A" : order.tableNo}
-                  </td>
-                  <td className="p-3 font-semibold">
-                    ₹{order.total.toFixed(2)}
-                  </td>
+                  <td className="p-3 text-sm">{order.guests}</td>
+                  <td className="p-3 text-sm">{order.tableNo}</td>
+                  <td className="p-3 text-sm">{order.phone}</td>
                   <td className="p-3 text-sm text-[#ababab]">
-                    {order.dateTime}
+                    {formatDateAndTime(order.createdAt)}
                   </td>
                 </tr>
               ))
