@@ -20,6 +20,10 @@ if (config.dialect === "sqlite") {
 const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
-db.User = require("./User")(sequelize, Sequelize);
-db.Order = require("./Order")(sequelize, Sequelize);
+
+// Pass Sequelize.DataTypes instead of Sequelize
+db.User = require("./User")(sequelize, Sequelize.DataTypes);
+db.Order = require("./Order")(sequelize, Sequelize.DataTypes);
+db.Table = require("./Table")(sequelize, Sequelize.DataTypes);
+
 module.exports = db;

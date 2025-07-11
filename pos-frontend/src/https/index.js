@@ -33,5 +33,11 @@ export const updatePaymentStatusApi = (id, paymentStatus) =>
   API.patch(`/orders/${id}/payment`, { paymentStatus });
 export const completeOrderApi = (id) => API.patch(`/orders/${id}/complete`);
 
+// tableNo and seats must be numbers
+export const createTable = (data) => API.post("/tables", data);
+// Fetch all tables
+export const getTables = () => API.get("/tables");
+
+
 export const logout = () => Promise.resolve();
 
