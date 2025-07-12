@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 'dine-in'
     },
     status: {
-      type: DataTypes.ENUM('pending', 'confirmed', 'preparing', 'ready', 'served', 'completed', 'cancelled'),
+      type: DataTypes.ENUM('pending', 'confirmed', 'preparing', 'In Progress', 'ready', 'served', 'completed', 'cancelled'),
       defaultValue: 'pending'
     },
     paymentStatus: {

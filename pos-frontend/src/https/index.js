@@ -28,7 +28,7 @@ export const loginCustomer = (data) => API.post("/auth/customer/login", data);
 export const createOrder = (data) => API.post("/orders", data);
 // https/index.js
 export const getOrders = () => API.get("/orders");
-export const updateOrderStatusApi = (id, status) => API.patch(`/orders/${id}/status`, { status });
+export const updateOrderStatusApi = (id, status) => API.put(`/orders/${id}/status`, { status });
 export const updatePaymentStatusApi = (id, paymentStatus) =>
   API.patch(`/orders/${id}/payment`, { paymentStatus });
 export const completeOrderApi = (id) => API.patch(`/orders/${id}/complete`);

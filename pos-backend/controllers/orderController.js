@@ -27,7 +27,7 @@ exports.createOrder = async (req, res) => {
       paymentMethod,
       paymentStatus,
       total, // Handle frontend total
-      status // Handle frontend status
+      status = "In Progress",  // <-- fixed here: default status as string
     } = req.body;
 
     // Normalize field names for compatibility
@@ -42,43 +42,36 @@ exports.createOrder = async (req, res) => {
       });
     }
 
-    // Handle different item formats
+    // Process items
     let processedItems = [];
     let subtotal = 0;
 
     if (items && items.length > 0) {
-      // Process items - handle both frontend and backend formats
       for (const item of items) {
         let menuItem;
-        
-        // Try to find menu item by different possible ID fields
         if (item.menuItemId) {
           menuItem = await MenuItem.findByPk(item.menuItemId);
         } else if (item.id) {
           menuItem = await MenuItem.findByPk(item.id);
         }
-        
         if (!menuItem) {
           return res.status(400).json({
             success: false,
             message: `Menu item not found for item: ${item.name || item.menuItemId || item.id}`
           });
         }
-        
         const quantity = item.quantity || 1;
         const itemTotal = menuItem.price * quantity;
         subtotal += itemTotal;
-        
         processedItems.push({
           menuItemId: menuItem.id,
-          quantity: quantity,
+          quantity,
           unitPrice: menuItem.price,
           totalPrice: itemTotal,
           notes: item.notes || ""
         });
       }
     } else {
-      // If no items provided, use the total from frontend or default to 0
       subtotal = total || 0;
     }
 
@@ -86,12 +79,12 @@ exports.createOrder = async (req, res) => {
     const taxAmount = (subtotal * taxRate) / 100;
     const totalAmount = subtotal + taxAmount;
 
-    // Generate order number manually to ensure it's set
+    // Generate order number
     const orderNumber = `ORD${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-    // Create order with generated orderNumber
+    // Create order
     const order = await Order.create({
-      orderNumber, // ✅ Manually set orderNumber
+      orderNumber,
       customerName: normalizedCustomerName,
       customerPhone: normalizedCustomerPhone,
       customerId,
@@ -99,34 +92,30 @@ exports.createOrder = async (req, res) => {
       tableId,
       tableNo,
       guests: guests || 1,
-      orderType: orderType || 'dine-in',
+      orderType: orderType || "dine-in",
       subtotal,
       taxAmount,
       totalAmount,
       notes,
-      status: status || (paymentStatus === 'paid' ? 'confirmed' : 'pending'),
-      paymentStatus: paymentStatus || 'pending'
+      status: status || (paymentStatus === "paid" ? "confirmed" : "In Progress"),
+      paymentStatus: paymentStatus || "pending"
     });
 
-    // Payment creation temporarily disabled to avoid database issues
-    // await Payment.create({ ... });
-
-    // Update table status if dine-in order
-    if (orderType === 'dine-in' && tableId) {
+    // Update table if dine-in
+    if (orderType === "dine-in" && tableId) {
       try {
         const table = await Table.findByPk(tableId);
         if (table) {
-          table.status = 'Booked';
+          table.status = "Booked";
           table.initial = getInitials(normalizedCustomerName);
           await table.save();
         }
       } catch (tableError) {
         console.warn("Table update failed:", tableError.message);
-        // Continue without updating table
       }
     }
 
-    // Create order items only if we have processed items
+    // Create order items
     if (processedItems.length > 0) {
       for (const item of processedItems) {
         await OrderItem.create({
@@ -141,22 +130,22 @@ exports.createOrder = async (req, res) => {
       include: [
         {
           model: OrderItem,
-          as: 'orderItems',
+          as: "orderItems",
           include: [{
             model: MenuItem,
-            as: 'menuItem',
-            attributes: ['id', 'name', 'price', 'image']
+            as: "menuItem",
+            attributes: ["id", "name", "price", "image"]
           }]
         }
       ]
     });
 
-    // Transform order to match frontend expectations
     const orderData = completeOrder.toJSON();
+
     const transformedOrder = {
       id: orderData.id,
-      customer: orderData.customerName,           // ✅ Map customerName to customer
-      phone: orderData.customerPhone,             // ✅ Map customerPhone to phone
+      customer: orderData.customerName,
+      phone: orderData.customerPhone,
       status: orderData.status,
       guests: orderData.guests,
       tableNo: orderData.tableNo,
@@ -165,14 +154,12 @@ exports.createOrder = async (req, res) => {
       paymentStatus: orderData.paymentStatus,
       createdAt: orderData.createdAt,
       updatedAt: orderData.updatedAt,
-      dateTime: orderData.createdAt,              // ✅ Map createdAt to dateTime for frontend
-      // Keep original fields for backward compatibility
+      dateTime: orderData.createdAt,
       customerName: orderData.customerName,
       customerPhone: orderData.customerPhone,
       totalAmount: orderData.totalAmount,
-      // Include associations
       orderItems: orderData.orderItems || [],
-      items: orderData.orderItems || []          // ✅ Map orderItems to items for frontend
+      items: orderData.orderItems || []
     };
 
     res.status(201).json({
@@ -183,16 +170,15 @@ exports.createOrder = async (req, res) => {
 
   } catch (error) {
     console.error("Error creating order:", error);
-    console.error("Error stack:", error.stack);
-    console.error("Request body:", req.body);
     res.status(500).json({
       success: false,
       message: "Error creating order",
       error: error.message,
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      details: process.env.NODE_ENV === "development" ? error.stack : undefined
     });
   }
 };
+
 
 // Test endpoint for debugging
 exports.testOrderCreation = async (req, res) => {
