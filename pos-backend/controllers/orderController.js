@@ -1,4 +1,10 @@
-const { Order } = require("../models");
+const { Order, Table } = require("../models");
+
+const getInitials = (name) => {
+  const parts = name.trim().split(" ");
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[1][0]).toUpperCase();
+};
 
 exports.createOrder = async (req, res) => {
   try {
@@ -6,19 +12,15 @@ exports.createOrder = async (req, res) => {
 
     console.log("📥 Incoming Order Body:", req.body);
 
-    // Validate required fields
     if (!customer || !phone || !tableId || !tableNo || guests === undefined) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // Convert guests and tableId to numbers
     guests = parseInt(guests);
     tableId = parseInt(tableId);
 
     if (isNaN(guests) || isNaN(tableId)) {
-      return res
-        .status(400)
-        .json({ message: "Invalid guests or tableId value" });
+      return res.status(400).json({ message: "Invalid guests or tableId value" });
     }
 
     const newOrder = await Order.create({
@@ -30,16 +32,26 @@ exports.createOrder = async (req, res) => {
       status: "In Progress",
     });
 
+    // 🔸 Update table status and initial
+    const initials = getInitials(customer);
+    const table = await Table.findByPk(tableId);
+
+    if (table) {
+      table.status = "Booked";
+      table.initial = initials;
+      await table.save();
+    }
+
     console.log("✅ Order created:", newOrder);
 
     return res.status(201).json(newOrder);
   } catch (error) {
     console.error("❌ Backend error while creating order:", error);
-    return res
-      .status(500)
-      .json({ message: "Server error while creating order" });
+    return res.status(500).json({ message: "Server error while creating order" });
   }
 };
+
+
 
 exports.getOrdersByStatus = async (req, res) => {
   try {
