@@ -1,7 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { itemsData, metricsData } from "../../constants";
+import { getTables } from "../../https"; // ✅ Import your getTables API
 
 const Metrics = () => {
+  const [tablesCount, setTablesCount] = useState(0);
+
+  useEffect(() => {
+    const fetchTables = async () => {
+      try {
+        const response = await getTables();
+        if (Array.isArray(response.data)) {
+          setTablesCount(response.data.length);
+        }
+      } catch (error) {
+        console.error("Error fetching tables:", error);
+        setTablesCount(0);
+      }
+    };
+
+    fetchTables();
+  }, []);
+
   return (
     <div className="container mx-auto py-2 px-6 md:px-4">
       <div className="flex justify-between items-center">
@@ -70,9 +89,7 @@ const Metrics = () => {
 
       <div className="flex flex-col justify-between mt-12">
         <div>
-          <h2 className="font-semibold text-[#f5f5f5] text-xl">
-            Item Details
-          </h2>
+          <h2 className="font-semibold text-[#f5f5f5] text-xl">Item Details</h2>
           <p className="text-sm text-[#ababab]">
             Lorem, ipsum dolor sit amet consectetur adipisicing elit.
             Distinctio, obcaecati?
@@ -80,26 +97,39 @@ const Metrics = () => {
         </div>
 
         <div className="mt-6 grid grid-cols-4 gap-4">
-
-            {
-                itemsData.map((item, index) => {
-                    return (
-                        <div key={index} className="shadow-sm rounded-lg p-4" style={{ backgroundColor: item.color }}>
-                        <div className="flex justify-between items-center">
-                          <p className="font-medium text-xs text-[#f5f5f5]">{item.title}</p>
-                          <div className="flex items-center gap-1">
-                            <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4" fill="none">
-                              <path d="M5 15l7-7 7 7" />
-                            </svg>
-                            <p className="font-medium text-xs text-[#f5f5f5]">{item.percentage}</p>
-                          </div>
-                        </div>
-                        <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">{item.value}</p>
-                      </div>
-                    )
-                })
-            }
-
+          {itemsData.map((item, index) => {
+            return (
+              <div
+                key={index}
+                className="shadow-sm rounded-lg p-4"
+                style={{ backgroundColor: item.color }}
+              >
+                <div className="flex justify-between items-center">
+                  <p className="font-medium text-xs text-[#f5f5f5]">
+                    {item.title}
+                  </p>
+                  <div className="flex items-center gap-1">
+                    <svg
+                      className="w-3 h-3 text-white"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    >
+                      <path d="M5 15l7-7 7 7" />
+                    </svg>
+                    <p className="font-medium text-xs text-[#f5f5f5]">
+                      {item.percentage}
+                    </p>
+                  </div>
+                </div>
+                <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
+                  {/* ✅ Replaced with dynamic table count */}
+                  {item.title === "Total Tables" ? tablesCount : item.value}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
