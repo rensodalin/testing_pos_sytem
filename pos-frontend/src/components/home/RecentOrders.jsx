@@ -1,36 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import OrderList from "./OrderList";
-import { getOrders } from "../../https"; // ✅ Assumes Axios is used here
+import { getOrders } from "../../https";
 
 const RecentOrders = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [orders, setOrders] = useState([]);
 
+  // Fetch orders from API
+  const fetchOrders = async () => {
+    try {
+      const response = await getOrders();
+      const fetchedOrders = Array.isArray(response.data)
+        ? response.data
+        : [];
+
+      setOrders(fetchedOrders);
+    } catch (error) {
+      console.error("Failed to fetch orders:", error);
+      setOrders([]);
+    }
+  };
+
+  // Load orders on mount and refresh every 10 seconds
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await getOrders();
-        console.log("Fetched orders:", response);
+    fetchOrders(); // initial load
 
-        // ✅ If you're using Axios, the actual data is in response.data
-        const fetchedOrders = Array.isArray(response.data)
-          ? response.data
-          : Array.isArray(response)
-          ? response
-          : [];
+    const intervalId = setInterval(() => {
+      fetchOrders(); // auto-refresh every 10s
+    }, 10000);
 
-        setOrders(fetchedOrders);
-      } catch (error) {
-        console.error("Failed to fetch orders:", error);
-        setOrders([]); // fallback to empty array
-      }
-    };
-
-    fetchOrders();
+    return () => clearInterval(intervalId); // clean up
   }, []);
 
-  // ✅ Filter orders based on search input
+  // Filter orders based on search
   const filteredOrders = orders.filter(
     (order) =>
       order.customer?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -50,7 +53,7 @@ const RecentOrders = () => {
           </a>
         </div>
 
-        {/* Search Input */}
+        {/* Search bar */}
         <div className="flex items-center gap-4 bg-[#1f1f1f] rounded-[15px] px-6 py-4 mx-6">
           <FaSearch className="text-[#f5f5f5]" />
           <input
@@ -60,9 +63,15 @@ const RecentOrders = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="bg-[#1f1f1f] outline-none text-[#f5f5f5] flex-1"
           />
+          <button
+            onClick={fetchOrders}
+            className="text-sm text-blue-400 hover:text-blue-300 underline"
+          >
+            Refresh Orders
+          </button>
         </div>
 
-        {/* Filtered Orders List */}
+        {/* Orders list */}
         <div className="mt-4 px-6 overflow-y-scroll h-[300px] scrollbar-hide">
           {filteredOrders.length > 0 ? (
             filteredOrders.map((order) => (

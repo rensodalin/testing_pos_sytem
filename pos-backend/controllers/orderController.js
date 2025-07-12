@@ -16,7 +16,9 @@ exports.createOrder = async (req, res) => {
     tableId = parseInt(tableId);
 
     if (isNaN(guests) || isNaN(tableId)) {
-      return res.status(400).json({ message: "Invalid guests or tableId value" });
+      return res
+        .status(400)
+        .json({ message: "Invalid guests or tableId value" });
     }
 
     const newOrder = await Order.create({
@@ -33,7 +35,9 @@ exports.createOrder = async (req, res) => {
     return res.status(201).json(newOrder);
   } catch (error) {
     console.error("❌ Backend error while creating order:", error);
-    return res.status(500).json({ message: "Server error while creating order" });
+    return res
+      .status(500)
+      .json({ message: "Server error while creating order" });
   }
 };
 
@@ -51,6 +55,34 @@ exports.getOrdersByStatus = async (req, res) => {
     return res.status(200).json(orders);
   } catch (error) {
     console.error("❌ Backend error while fetching orders:", error);
-    return res.status(500).json({ message: "Server error while fetching orders" });
+    return res
+      .status(500)
+      .json({ message: "Server error while fetching orders" });
+  }
+};
+exports.updateOrderStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  if (!status) {
+    return res.status(400).json({ message: "Status is required" });
+  }
+
+  try {
+    const order = await Order.findByPk(id);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    order.status = status;
+    await order.save();
+
+    return res.status(200).json(order);
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    return res
+      .status(500)
+      .json({ message: "Server error updating order status" });
   }
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { getOrders } from "../../https";
+import { getOrders, updateOrderStatusApi } from "../../https";
 
-// Utility function to format date safely
+// Utility function to format date
 const formatDateAndTime = (dateString) => {
   if (!dateString) return "N/A";
   const date = new Date(dateString);
@@ -19,18 +19,30 @@ const RecentOrders = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await getOrders();
-        console.log("Fetched orders:", response.data); // For debugging
-        setOrders(response.data);
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-      }
-    };
-
     fetchOrders();
   }, []);
+
+  const fetchOrders = async () => {
+    try {
+      const response = await getOrders();
+      setOrders(response.data);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+
+  const handleStatusChange = async (orderId) => {
+    try {
+      await updateOrderStatusApi(orderId, "Ready");
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === orderId ? { ...order, status: "Ready" } : order
+        )
+      );
+    } catch (error) {
+      console.error("Failed to update order status:", error);
+    }
+  };
 
   return (
     <div className="container mx-auto bg-[#262626] p-4 rounded-lg">
@@ -58,19 +70,26 @@ const RecentOrders = () => {
                   <td className="p-3 text-sm">#{order.id}</td>
                   <td className="p-3 font-medium">{order.customer}</td>
                   <td className="p-3">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        order.status === "Ready"
-                          ? "bg-green-600 text-white"
-                          : order.status === "In Progress"
-                          ? "bg-yellow-600 text-white"
-                          : order.status === "Completed"
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-600 text-white"
-                      }`}
-                    >
-                      {order.status}
-                    </span>
+                    {order.status === "In Progress" ? (
+                      <button
+                        onClick={() => handleStatusChange(order.id)}
+                        className="bg-yellow-600 hover:bg-green-600 text-white text-xs font-medium px-3 py-1 rounded-full transition duration-300"
+                      >
+                        Mark as Ready
+                      </button>
+                    ) : (
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          order.status === "Ready"
+                            ? "bg-green-600"
+                            : order.status === "Completed"
+                            ? "bg-blue-600"
+                            : "bg-gray-600"
+                        } text-white`}
+                      >
+                        {order.status}
+                      </span>
+                    )}
                   </td>
                   <td className="p-3 text-sm">{order.guests}</td>
                   <td className="p-3 text-sm">{order.tableNo}</td>
