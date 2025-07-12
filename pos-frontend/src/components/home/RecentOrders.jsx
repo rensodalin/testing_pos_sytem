@@ -6,19 +6,28 @@ import { getOrders } from "../../https";
 const RecentOrders = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Fetch orders from API
   const fetchOrders = async () => {
     try {
       const response = await getOrders();
+      console.log("API Response (RecentOrders):", response.data);
+
+      // Adjust this based on your backend response shape:
+      // Example if backend returns { orders: [...] }
       const fetchedOrders = Array.isArray(response.data)
         ? response.data
+        : Array.isArray(response.data.orders)
+        ? response.data.orders
         : [];
 
       setOrders(fetchedOrders);
     } catch (error) {
       console.error("Failed to fetch orders:", error);
       setOrders([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,17 +72,13 @@ const RecentOrders = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="bg-[#1f1f1f] outline-none text-[#f5f5f5] flex-1"
           />
-          <button
-            onClick={fetchOrders}
-            className="text-sm text-blue-400 hover:text-blue-300 underline"
-          >
-            Refresh Orders
-          </button>
         </div>
 
         {/* Orders list */}
         <div className="mt-4 px-6 overflow-y-scroll h-[300px] scrollbar-hide">
-          {filteredOrders.length > 0 ? (
+          {loading ? (
+            <p className="text-center text-gray-400 py-8">Loading orders...</p>
+          ) : filteredOrders.length > 0 ? (
             filteredOrders.map((order) => (
               <OrderList key={order.id} order={order} />
             ))

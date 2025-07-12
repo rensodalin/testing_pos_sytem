@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "In Progress",
       },
     });
+    
   
     return Order;
   };
