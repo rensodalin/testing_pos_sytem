@@ -10,7 +10,7 @@ const OrderCard = ({ order }) => {
 
   const customerName = order.customer || "Unknown Customer";
   const tableNo = order.orderType === "online" ? "N/A" : (order.tableNo || "N/A");
-  const total = order.total || 0;
+  const total = parseFloat(order.total || order.totalAmount || 0) || 0;  // ✅ Ensure total is always a number
   const itemsCount = order.items || 0;
   const orderId = order.id || "N/A";
   const dateTime = order.dateTime || "N/A";

@@ -18,8 +18,10 @@ const Orders = () => {
       setLoading(true);
       try {
         const response = await getOrders();
-        // Assume your API response contains orders in response.data
-        const fetchedOrders = Array.isArray(response.data)
+        // Handle backend response format: { success: true, data: [...] }
+        const fetchedOrders = response.data?.success && Array.isArray(response.data.data)
+          ? response.data.data
+          : Array.isArray(response.data)
           ? response.data
           : [];
 

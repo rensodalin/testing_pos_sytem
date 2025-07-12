@@ -9,7 +9,12 @@ const PopularDishes = () => {
     const fetchData = async () => {
       try {
         const response = await getOrders();
-        const orders = Array.isArray(response.data) ? response.data : [];
+        // Handle backend response format: { success: true, data: [...] }
+        const orders = response.data?.success && Array.isArray(response.data.data)
+          ? response.data.data
+          : Array.isArray(response.data)
+          ? response.data
+          : [];
 
         // Tally order counts by drink name
         const drinkCounts = {};

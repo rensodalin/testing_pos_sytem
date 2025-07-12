@@ -14,17 +14,17 @@ const RecentOrders = () => {
       const response = await getOrders();
       console.log("API Response (RecentOrders):", response.data);
 
-      // Adjust this based on your backend response shape:
-      // Example if backend returns { orders: [...] }
-      const fetchedOrders = Array.isArray(response.data)
+      // Handle backend response format: { success: true, data: [...] }
+      const fetchedOrders = response.data?.success && Array.isArray(response.data.data)
+        ? response.data.data
+        : Array.isArray(response.data)
         ? response.data
-        : Array.isArray(response.data.orders)
-        ? response.data.orders
         : [];
 
       setOrders(fetchedOrders);
     } catch (error) {
       console.error("Failed to fetch orders:", error);
+      // Don't show error to user, just set empty orders
       setOrders([]);
     } finally {
       setLoading(false);

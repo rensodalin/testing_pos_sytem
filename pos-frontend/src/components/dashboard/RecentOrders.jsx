@@ -25,9 +25,17 @@ const RecentOrders = () => {
   const fetchOrders = async () => {
     try {
       const response = await getOrders();
-      setOrders(response.data);
+      // Handle backend response format: { success: true, data: [...] }
+      const fetchedOrders = response.data?.success && Array.isArray(response.data.data)
+        ? response.data.data
+        : Array.isArray(response.data)
+        ? response.data
+        : [];
+      
+      setOrders(fetchedOrders);
     } catch (error) {
       console.error("Error fetching orders:", error);
+      setOrders([]);
     }
   };
 
