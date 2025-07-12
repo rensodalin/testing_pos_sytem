@@ -11,13 +11,9 @@ const TableCard = ({ id, name, status, initials, seats }) => {
 
   const handleClick = () => {
     if (status === "Booked") return;
-    
-    // Assign table to customer
     const table = { tableId: id, tableNo: name };
     dispatch(updateTable({ table }));
-    
-    // Navigate to menu
-    navigate(`/menu`);
+    navigate("/menu");
   };
 
   return (
@@ -61,4 +57,3 @@ const TableCard = ({ id, name, status, initials, seats }) => {
 };
 
 export default TableCard;
-

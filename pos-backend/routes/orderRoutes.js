@@ -12,3 +12,4 @@ router.get("/", getOrdersByStatus);
 router.patch("/:id/status", updateOrderStatus); // ✅ for "Mark as Ready"
 
 module.exports = router;
+
