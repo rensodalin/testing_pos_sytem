@@ -452,6 +452,21 @@ exports.updateOrderStatus = async (req, res) => {
     
     if (status === 'completed') {
       updateData.completedAt = new Date();
+      
+      // Reset table status when order is completed
+      if (order.tableId) {
+        try {
+          const table = await Table.findByPk(order.tableId);
+          if (table) {
+            table.status = 'Available';
+            table.initial = '-';
+            await table.save();
+          }
+        } catch (tableError) {
+          console.warn("Table reset failed:", tableError.message);
+          // Continue without resetting table
+        }
+      }
     }
     
     if (estimatedTime) {
@@ -621,6 +636,21 @@ exports.deleteOrder = async (req, res) => {
       });
     }
 
+    // Reset table status if this was a dine-in order
+    if (order.tableId) {
+      try {
+        const table = await Table.findByPk(order.tableId);
+        if (table) {
+          table.status = 'Available';
+          table.initial = '-';
+          await table.save();
+        }
+      } catch (tableError) {
+        console.warn("Table reset failed:", tableError.message);
+        // Continue without resetting table
+      }
+    }
+
     // Delete related records
     await OrderItem.destroy({ where: { orderId: id } });
     await Payment.destroy({ where: { orderId: id } });
@@ -636,6 +666,57 @@ exports.deleteOrder = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error deleting order",
+      error: error.message
+    });
+  }
+};
+
+// Complete order (sets status to completed and resets table)
+exports.completeOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const order = await Order.findByPk(id);
+    
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found"
+      });
+    }
+
+    // Update order status to completed
+    await order.update({ 
+      status: 'completed',
+      completedAt: new Date()
+    });
+
+    // Reset table status when order is completed
+    if (order.tableId) {
+      try {
+        const table = await Table.findByPk(order.tableId);
+        if (table) {
+          table.status = 'Available';
+          table.initial = '-';
+          await table.save();
+        }
+      } catch (tableError) {
+        console.warn("Table reset failed:", tableError.message);
+        // Continue without resetting table
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Order completed successfully",
+      data: order
+    });
+
+  } catch (error) {
+    console.error("Error completing order:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error completing order",
       error: error.message
     });
   }

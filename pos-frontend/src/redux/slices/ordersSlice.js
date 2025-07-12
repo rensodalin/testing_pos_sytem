@@ -1,4 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { updateOrderStatusApi, updatePaymentStatusApi, completeOrderApi } from "../../https";
+
+// Async thunks
+export const updateOrderStatusAsync = createAsyncThunk(
+  'orders/updateOrderStatusAsync',
+  async ({ orderId, status }) => {
+    const response = await updateOrderStatusApi(orderId, status);
+    return { orderId, status, data: response.data };
+  }
+);
+
+export const updatePaymentStatusAsync = createAsyncThunk(
+  'orders/updatePaymentStatusAsync',
+  async ({ orderId, paymentStatus }) => {
+    const response = await updatePaymentStatusApi(orderId, paymentStatus);
+    return { orderId, paymentStatus, data: response.data };
+  }
+);
+
+export const completeOrderAsync = createAsyncThunk(
+  'orders/completeOrderAsync',
+  async ({ orderId }) => {
+    const response = await completeOrderApi(orderId);
+    return { orderId, data: response.data };
+  }
+);
 
 const initialState = {
   orders: [
@@ -157,6 +183,77 @@ const ordersSlice = createSlice({
     clearRecentOrders: (state) => {
       state.recentOrders = [];
     }
+  },
+  extraReducers: (builder) => {
+    // Update order status async
+    builder
+      .addCase(updateOrderStatusAsync.pending, (state) => {
+        // Handle loading state if needed
+      })
+      .addCase(updateOrderStatusAsync.fulfilled, (state, action) => {
+        const { orderId, status } = action.payload;
+        const order = state.orders.find(o => o.id === orderId);
+        if (order) {
+          order.status = status;
+        }
+        
+        const recentOrder = state.recentOrders.find(o => o.id === orderId);
+        if (recentOrder) {
+          recentOrder.status = status;
+        }
+      })
+      .addCase(updateOrderStatusAsync.rejected, (state, action) => {
+        // Handle error state if needed
+        console.error('Failed to update order status:', action.error);
+      });
+
+    // Update payment status async
+    builder
+      .addCase(updatePaymentStatusAsync.pending, (state) => {
+        // Handle loading state if needed
+      })
+      .addCase(updatePaymentStatusAsync.fulfilled, (state, action) => {
+        const { orderId, paymentStatus } = action.payload;
+        const order = state.orders.find(o => o.id === orderId);
+        if (order) {
+          order.paymentStatus = paymentStatus;
+          if (paymentStatus === "paid" && order.status === "In Progress") {
+            order.status = "Ready";
+          }
+        }
+        
+        const recentOrder = state.recentOrders.find(o => o.id === orderId);
+        if (recentOrder) {
+          recentOrder.paymentStatus = paymentStatus;
+          if (paymentStatus === "paid" && recentOrder.status === "In Progress") {
+            recentOrder.status = "Ready";
+          }
+        }
+      })
+      .addCase(updatePaymentStatusAsync.rejected, (state, action) => {
+        console.error('Failed to update payment status:', action.error);
+      });
+
+    // Complete order async
+    builder
+      .addCase(completeOrderAsync.pending, (state) => {
+        // Handle loading state if needed
+      })
+      .addCase(completeOrderAsync.fulfilled, (state, action) => {
+        const { orderId } = action.payload;
+        const order = state.orders.find(o => o.id === orderId);
+        if (order) {
+          order.status = "Completed";
+        }
+        
+        const recentOrder = state.recentOrders.find(o => o.id === orderId);
+        if (recentOrder) {
+          recentOrder.status = "Completed";
+        }
+      })
+      .addCase(completeOrderAsync.rejected, (state, action) => {
+        console.error('Failed to complete order:', action.error);
+      });
   }
 });
 

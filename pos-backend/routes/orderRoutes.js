@@ -27,6 +27,7 @@ router.get("/:id", authMiddleware, orderController.getOrderById);
 // Update orders
 router.put("/:id/status", authMiddleware, orderController.updateOrderStatus);
 router.put("/:id/payment", authMiddleware, orderController.updatePaymentStatus);
+router.patch("/:id/complete", authMiddleware, orderController.completeOrder);
 
 // Delete order
 router.delete("/:id", authMiddleware, orderController.deleteOrder);

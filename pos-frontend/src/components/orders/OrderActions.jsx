@@ -2,41 +2,50 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { FaCheck, FaTimes, FaEdit, FaCreditCard } from "react-icons/fa";
-import { updateOrderStatus, updatePaymentStatus, completeOrder } from "../../redux/slices/ordersSlice";
+import { updateOrderStatusAsync, updatePaymentStatusAsync, completeOrderAsync } from "../../redux/slices/ordersSlice";
 import { enqueueSnackbar } from "notistack";
 
 const OrderActions = ({ order }) => {
   const dispatch = useDispatch();
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const handleStatusUpdate = (newStatus) => {
+  const handleStatusUpdate = async (newStatus) => {
     setIsUpdating(true);
     
-    setTimeout(() => {
-      dispatch(updateOrderStatus({ orderId: order.id, status: newStatus }));
+    try {
+      await dispatch(updateOrderStatusAsync({ orderId: order.id, status: newStatus })).unwrap();
       enqueueSnackbar(`Order status updated to ${newStatus}`, { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar(`Failed to update order status: ${error.message}`, { variant: "error" });
+    } finally {
       setIsUpdating(false);
-    }, 500);
+    }
   };
 
-  const handlePaymentUpdate = (paymentStatus) => {
+  const handlePaymentUpdate = async (paymentStatus) => {
     setIsUpdating(true);
     
-    setTimeout(() => {
-      dispatch(updatePaymentStatus({ orderId: order.id, paymentStatus }));
+    try {
+      await dispatch(updatePaymentStatusAsync({ orderId: order.id, paymentStatus })).unwrap();
       enqueueSnackbar(`Payment status updated to ${paymentStatus}`, { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar(`Failed to update payment status: ${error.message}`, { variant: "error" });
+    } finally {
       setIsUpdating(false);
-    }, 500);
+    }
   };
 
-  const handleCompleteOrder = () => {
+  const handleCompleteOrder = async () => {
     setIsUpdating(true);
     
-    setTimeout(() => {
-      dispatch(completeOrder({ orderId: order.id }));
+    try {
+      await dispatch(completeOrderAsync({ orderId: order.id })).unwrap();
       enqueueSnackbar("Order marked as completed", { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar(`Failed to complete order: ${error.message}`, { variant: "error" });
+    } finally {
       setIsUpdating(false);
-    }, 500);
+    }
   };
 
   return (
